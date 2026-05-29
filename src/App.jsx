@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import Preloader from './components/Preloader'
-import HomeScreen from './HomeScreen'
+import IntegratedPage from './components/IntegratedPage'
 import useScrollReveal from './hooks/useScrollReveal'
 
 export default function App() {
@@ -16,7 +16,7 @@ export default function App() {
           loading ? 'pointer-events-none h-screen overflow-hidden opacity-0' : 'opacity-100'
         }`}
       >
-        {!loading && <HomeScreen />}
+        {!loading && <IntegratedPage/>}
       </div>
     </>
   )

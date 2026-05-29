@@ -17,11 +17,6 @@ const CONTACT = [
     label: 'Location',
     value: 'Mumbai, Maharashtra, India',
   },
-  {
-    label: 'Website',
-    value: 'www.jvedtech.com',
-    href: 'https://jvedtech.com',
-  },
 ]
 
 export default function Contact() {
