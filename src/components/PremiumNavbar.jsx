@@ -1,55 +1,49 @@
 import { useState, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 const NAV_LINKS = [
-  { label: 'Home', href: '#home', smooth: true },
-  { label: 'About', href: '#about', smooth: true },
-  { label: 'Services', href: '#services', smooth: true },
-  { label: 'Events', href: '#events', smooth: true },
-  { label: 'Careers', href: '#careers', smooth: true },
-  { label: 'Community', href: '#community', smooth: true },
-  { label: 'Contact', href: '#contact', smooth: true },
+  { label: 'Home', path: '/' },
+  { label: 'About', path: '/about' },
+  { label: 'Services', path: '/services' },
+  { label: 'Events', path: '/events' },
+  { label: 'Careers', path: '/careers' },
+  { label: 'Community', path: '/community' },
 ]
 
 export default function PremiumNavbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
+  const navigate = useNavigate()
+  const location = useLocation()
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50)
-
-      // Detect active section
-      const sections = ['home', 'about', 'services', 'events', 'careers', 'community', 'contact']
-      for (const section of sections) {
-        const el = document.getElementById(section)
-        if (el) {
-          const rect = el.getBoundingClientRect()
-          if (rect.top <= 150 && rect.bottom > 150) {
-            setActiveSection(section)
-            break
-          }
-        }
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    const scrollHandler = () => setIsScrolled(window.scrollY > 50)
+    scrollHandler()
+    window.addEventListener('scroll', scrollHandler)
+    return () => window.removeEventListener('scroll', scrollHandler)
   }, [])
 
-  const handleNavClick = (e, href) => {
-    e.preventDefault()
-    const id = href.replace('#', '')
-    const element = document.getElementById(id)
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      setIsMobileMenuOpen(false)
+  useEffect(() => {
+    const pathToSection = {
+      '/': 'home',
+      '/about': 'about',
+      '/services': 'services',
+      '/events': 'events',
+      '/careers': 'careers',
+      '/community': 'community',
     }
+    setActiveSection(pathToSection[location.pathname] || 'home')
+  }, [location.pathname])
+
+  const handleNavClick = (e, path) => {
+    e.preventDefault()
+    setIsMobileMenuOpen(false)
+    navigate(path)
   }
 
   return (
     <>
-      {/* Fixed Navbar */}
       <nav
         style={{
           position: 'fixed',
@@ -77,10 +71,9 @@ export default function PremiumNavbar() {
             justifyContent: 'space-between',
           }}
         >
-          {/* Logo */}
           <a
-            href="#home"
-            onClick={(e) => handleNavClick(e, '#home')}
+            href="/"
+            onClick={(e) => handleNavClick(e, '/')}
             style={{
               fontSize: '18px',
               fontWeight: 700,
@@ -117,72 +110,46 @@ export default function PremiumNavbar() {
             JVEDTECH
           </a>
 
-          {/* Desktop Menu */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              '@media (max-width: 768px)': {
-                display: 'none',
-              },
-            }}
-          >
-            {NAV_LINKS.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                onClick={(e) => handleNavClick(e, link.href)}
-                style={{
-                  color: activeSection === link.href.replace('#', '') ? '#4ecdc4' : 'rgba(255,255,255,0.7)',
-                  textDecoration: 'none',
-                  fontSize: '13px',
-                  fontWeight: 500,
-                  padding: '8px 16px',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  background:
-                    activeSection === link.href.replace('#', '')
-                      ? 'rgba(78, 205, 196, 0.15)'
-                      : 'transparent',
-                  borderBottom:
-                    activeSection === link.href.replace('#', '')
-                      ? '2px solid #4ecdc4'
-                      : '2px solid transparent',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#4ecdc4'
-                  e.currentTarget.style.background = 'rgba(78, 205, 196, 0.1)'
-                }}
-                onMouseLeave={(e) => {
-                  if (activeSection !== link.href.replace('#', '')) {
-                    e.currentTarget.style.color = 'rgba(255,255,255,0.7)'
-                    e.currentTarget.style.background = 'transparent'
-                  }
-                }}
-              >
-                {link.label}
-              </a>
-            ))}
+          <div className="hidden md:flex items-center gap-8">
+            {NAV_LINKS.map((link) => {
+              const isActive = activeSection === (link.path === '/' ? 'home' : link.path.replace('/', ''))
+              return (
+                <a
+                  key={link.label}
+                  href={link.path}
+                  onClick={(e) => handleNavClick(e, link.path)}
+                  style={{
+                    color: isActive ? '#4ecdc4' : 'rgba(255,255,255,0.7)',
+                    textDecoration: 'none',
+                    fontSize: '13px',
+                    fontWeight: 500,
+                    padding: '8px 16px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    background: isActive ? 'rgba(78, 205, 196, 0.15)' : 'transparent',
+                    borderBottom: isActive ? '2px solid #4ecdc4' : '2px solid transparent',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = '#4ecdc4'
+                    e.currentTarget.style.background = 'rgba(78, 205, 196, 0.1)'
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.color = 'rgba(255,255,255,0.7)'
+                      e.currentTarget.style.background = 'transparent'
+                    }
+                  }}
+                >
+                  {link.label}
+                </a>
+              )
+            })}
           </div>
 
-          {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            style={{
-              display: 'none',
-              background: 'rgba(78, 205, 196, 0.2)',
-              border: '1px solid rgba(78, 205, 196, 0.4)',
-              color: '#4ecdc4',
-              padding: '8px 12px',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontSize: '18px',
-              '@media (max-width: 768px)': {
-                display: 'block',
-              },
-            }}
+            className="md:hidden rounded-lg border border-brand-300/30 bg-white/10 px-4 py-2 text-brand-200 hover:bg-white/15"
             aria-label="Toggle mobile menu"
             aria-expanded={isMobileMenuOpen}
           >
@@ -191,65 +158,25 @@ export default function PremiumNavbar() {
         </div>
       </nav>
 
-      {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div
-          style={{
-            position: 'fixed',
-            top: '60px',
-            left: 0,
-            right: 0,
-            background: 'rgba(15, 35, 25, 0.95)',
-            backdropFilter: 'blur(12px)',
-            borderBottom: '1px solid rgba(78, 205, 196, 0.2)',
-            zIndex: 999,
-            padding: '16px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '8px',
-          }}
-        >
-          {NAV_LINKS.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              onClick={(e) => handleNavClick(e, link.href)}
-              style={{
-                color: activeSection === link.href.replace('#', '') ? '#4ecdc4' : 'rgba(255,255,255,0.7)',
-                textDecoration: 'none',
-                fontSize: '14px',
-                fontWeight: 500,
-                padding: '12px 16px',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                background:
-                  activeSection === link.href.replace('#', '')
-                    ? 'rgba(78, 205, 196, 0.15)'
-                    : 'transparent',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(78, 205, 196, 0.1)'
-              }}
-              onMouseLeave={(e) => {
-                if (activeSection !== link.href.replace('#', '')) {
-                  e.currentTarget.style.background = 'transparent'
-                }
-              }}
-            >
-              {link.label}
-            </a>
-          ))}
+        <div className="fixed top-[76px] left-0 right-0 z-50 bg-[#0f2319de] backdrop-blur-xl border-b border-brand-600/20 p-4 md:hidden">
+          {NAV_LINKS.map((link) => {
+            const isActive = activeSection === (link.path === '/' ? 'home' : link.path.replace('/', ''))
+            return (
+              <a
+                key={link.label}
+                href={link.path}
+                onClick={(e) => handleNavClick(e, link.path)}
+                className={`block rounded-2xl px-4 py-3 text-sm font-medium transition ${
+                  isActive ? 'bg-brand-500/15 text-brand-200' : 'text-white/80 hover:bg-white/10'
+                }`}
+              >
+                {link.label}
+              </a>
+            )
+          })}
         </div>
       )}
-
-      <style>{`
-        @media (max-width: 768px) {
-          [style*="display: flex"] {
-            display: none !important;
-          }
-        }
-      `}</style>
     </>
   )
 }

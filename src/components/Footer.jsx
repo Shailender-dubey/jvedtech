@@ -11,7 +11,6 @@ const FOOTER_LINKS = [
       { label: 'Events', href: '#events' },
       { label: 'Careers', href: '#careers' },
       { label: 'Community', href: '#community' },
-      { label: 'Contact', href: '#contact' },
     ],
   },
   {

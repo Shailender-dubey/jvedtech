@@ -256,3 +256,15 @@ export const FOOTER_SECTIONS = {
     { label: 'Return Policy', href: '/return' },
   ],
 };
+
+// ============================================================
+// EVENTS (from src/components/Events.jsx)
+// ============================================================
+export const EVENTS = [
+  { id:1, title:"Advanced Wound Care & Management Workshop", date:"2025-07-14", time:"9:00 AM – 5:00 PM", location:"Mumbai, Maharashtra", status:"upcoming", seats:35, description:"A comprehensive hands-on workshop covering advanced wound assessment, dressing techniques, and infection control protocols for healthcare professionals.", tags:["Nursing","CME","Hands-on","Certificate"] },
+  { id:2, title:"Home Healthcare Fundamentals Seminar", date:"2025-06-28", time:"10:00 AM – 1:00 PM", location:"Online — Zoom", status:"live", seats:60, description:"Explore the principles of patient-centric home healthcare delivery. Ideal for nurses, caregivers, and allied health professionals.", tags:["Home Care","Online","Free"] },
+  { id:3, title:"Medical Ethics & Patient Rights Forum", date:"2025-08-05", time:"2:00 PM – 6:00 PM", location:"Pune, Maharashtra", status:"upcoming", seats:80, description:"An interactive forum addressing contemporary ethical challenges in healthcare, patient rights legislation, and institutional responsibilities.", tags:["Ethics","CME","Forum","All Levels"] },
+  { id:4, title:"ICU & Critical Care Nursing Update", date:"2025-05-10", time:"8:30 AM – 4:00 PM", location:"Mumbai, Maharashtra", status:"past", seats:0, description:"A one-day intensive refresher on critical care protocols, ventilator management, and patient monitoring for experienced ICU nurses.", tags:["ICU","Nursing","Advanced","Certificate"] },
+  { id:5, title:"Geriatric Care Excellence Programme", date:"2025-09-12", time:"9:00 AM – 3:00 PM", location:"Navi Mumbai | Online", status:"upcoming", seats:45, description:"A specialised programme focused on evidence-based geriatric assessment, fall prevention, dementia care, and palliative principles.", tags:["Geriatrics","Blended","CME"] },
+  { id:6, title:"Digital Health & Telemedicine Integration", date:"2025-05-01", time:"11:00 AM – 2:00 PM", location:"Online — MS Teams", status:"past", seats:0, description:"A forward-looking seminar examining digital transformation in healthcare delivery, telehealth best practices, and regulatory compliance.", tags:["Digital","Telemedicine","Online","Free"] }
+];

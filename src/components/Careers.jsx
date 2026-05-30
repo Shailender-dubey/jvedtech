@@ -119,7 +119,11 @@ function JobCard({ job, index }) {
             </div>
           </div>
 
-          <button className="mt-4 px-4 py-2 bg-brand-500 text-white text-sm font-semibold rounded-lg transition-all duration-300 hover:bg-brand-600 hover:shadow-md hover:shadow-brand-500/30">
+          <button
+            type="button"
+            onClick={() => document.getElementById('apply-form')?.scrollIntoView({ behavior: 'smooth' })}
+            className="mt-4 px-4 py-2 bg-brand-500 text-white text-sm font-semibold rounded-lg transition-all duration-300 hover:bg-brand-600 hover:shadow-md hover:shadow-brand-500/30"
+          >
             Apply for this Role →
           </button>
         </div>
@@ -130,18 +134,19 @@ function JobCard({ job, index }) {
 
 export default function Careers() {
   return (
-    <section className="section-light">
-      {/* Hero Section */}
-      <div className="py-20 sm:py-28 border-b border-brand-600/10">
-        <div className="section-container">
+    <section className="relative overflow-hidden py-28 sm:py-32">
+      <div className="pointer-events-none absolute inset-0 mesh-gradient opacity-30" />
+      <div className="section-container relative">
+        {/* Hero Section */}
+        <div className="py-20 sm:py-28">
           <div className="max-w-3xl">
-            <span className="text-xs font-semibold uppercase tracking-widest text-brand-500 block mb-4">
+            <span className="text-xs font-semibold uppercase tracking-widest text-brand-200 block mb-4">
               We're Hiring
             </span>
-            <h1 className="text-4xl sm:text-5xl font-light font-display text-brand-900 mb-4 leading-tight">
-              Shape the Future of <span className="text-brand-500">Healthcare Education</span>
+            <h1 className="text-4xl sm:text-5xl font-light font-display text-white mb-4 leading-tight">
+              Shape the Future of <span className="text-brand-300">Healthcare Education</span>
             </h1>
-            <p className="text-lg text-foreground-muted leading-relaxed mb-6">
+            <p className="text-white/70 leading-relaxed mb-6 text-lg">
               At JVEDTECH Medovation, we advance healthcare standards through tailored education and cutting-edge solutions. Join a team where learning, growth, and impact converge.
             </p>
 
@@ -149,7 +154,7 @@ export default function Careers() {
               <button className="px-6 py-2 bg-brand-500 text-white rounded-lg font-medium transition-all duration-300 hover:bg-brand-600">
                 View Open Roles
               </button>
-              <button className="px-6 py-2 border border-brand-300 text-brand-600 rounded-lg font-medium transition-all duration-300 hover:bg-brand-50">
+              <button className="px-6 py-2 border border-white/20 text-white rounded-lg font-medium transition-all duration-300 hover:bg-white/10">
                 Apply Now
               </button>
             </div>
@@ -161,13 +166,13 @@ export default function Careers() {
       <div className="py-20 sm:py-28 border-b border-brand-600/10">
         <div className="section-container">
           <div className="mb-12">
-            <span className="text-xs font-semibold uppercase tracking-widest text-brand-500 block mb-3">
+            <span className="text-xs font-semibold uppercase tracking-widest text-brand-200 block mb-3">
               Why JVedtech
             </span>
-            <h2 className="text-3xl sm:text-4xl font-light font-display text-brand-900 mb-3">
+            <h2 className="text-3xl sm:text-4xl font-light font-display text-white mb-3">
               Where expertise meets purpose
             </h2>
-            <p className="text-foreground-muted">
+            <p className="text-white/70">
               We believe the best healthcare outcomes start with the best-trained people.
             </p>
           </div>
@@ -213,49 +218,49 @@ export default function Careers() {
       </div>
 
       {/* Application CTA Section */}
-      <div className="py-20 sm:py-28 bg-gradient-to-r from-brand-50 to-brand-100/50">
+      <div className="py-20 sm:py-28">
         <div className="section-container">
           <div className="grid gap-12 lg:grid-cols-2">
             {/* Contact Details */}
             <div>
-              <h2 className="text-2xl font-light font-display text-brand-900 mb-8">
+              <h2 className="text-2xl font-light font-display text-white mb-8">
                 Get in Touch
               </h2>
 
-              <div className="space-y-6">
+              <div className="space-y-6 text-white/80">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-widest text-brand-500 mb-2">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-brand-300 mb-2">
                     Email
                   </p>
                   <a
                     href={`mailto:${CONTACT_INFO.email}`}
-                    className="text-brand-600 hover:text-brand-700 transition-colors"
+                    className="text-white hover:text-brand-100 transition-colors"
                   >
                     {CONTACT_INFO.email}
                   </a>
                 </div>
 
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-widest text-brand-500 mb-2">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-brand-300 mb-2">
                     Phone
                   </p>
                   <a
                     href={`tel:${CONTACT_INFO.phone.replace(/\s/g, '')}`}
-                    className="text-brand-600 hover:text-brand-700 transition-colors"
+                    className="text-white hover:text-brand-100 transition-colors"
                   >
                     {CONTACT_INFO.phone}
                   </a>
                 </div>
 
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-widest text-brand-500 mb-2">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-brand-300 mb-2">
                     Address
                   </p>
-                  <p className="text-brand-800">{CONTACT_INFO.address}</p>
+                  <p className="text-white">{CONTACT_INFO.address}</p>
                 </div>
 
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-widest text-brand-500 mb-2">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-brand-300 mb-2">
                     Response Time
                   </p>
                   <p className="text-brand-800">We aim to respond within 3–5 business days</p>
@@ -264,7 +269,7 @@ export default function Careers() {
             </div>
 
             {/* Application Form */}
-            <div className="glass-strong rounded-xl p-8">
+            <div id="apply-form" className="glass-strong rounded-xl p-8">
               <h3 className="text-xl font-semibold text-brand-900 mb-2">
                 Submit Your Application
               </h3>

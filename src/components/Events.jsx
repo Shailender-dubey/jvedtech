@@ -1,66 +1,35 @@
-import { useRef, useEffect, useState } from 'react'
+﻿import { useRef, useEffect, useState } from 'react'
+import { EVENTS } from '../data/content'
 
-const SAMPLE_EVENTS = [
-  {
-    id: 1,
-    title: 'Healthcare AI & Machine Learning Workshop',
-    date: '2025-06-15',
-    time: '10:00 AM – 1:00 PM',
-    location: 'Mumbai, India',
-    status: 'upcoming',
-    description: 'Learn how AI is transforming healthcare delivery, diagnostics, and patient care management.',
-    attendees: 45,
-  },
-  {
-    id: 2,
-    title: 'Clinical Training Excellence Seminar',
-    date: '2025-07-01',
-    time: '2:00 PM – 5:00 PM',
-    location: 'Online — MS Teams',
-    status: 'upcoming',
-    description: 'Explore best practices in clinical staff training and professional development strategies.',
-    attendees: 62,
-  },
-  {
-    id: 3,
-    title: 'Digital Health Leadership Summit',
-    date: '2025-05-20',
-    time: '9:00 AM – 3:00 PM',
-    location: 'Online — Hybrid',
-    status: 'upcoming',
-    description: 'Network with healthcare leaders and explore the future of digital health innovation.',
-    attendees: 120,
-  },
-  {
-    id: 4,
-    title: 'Telemedicine Integration Bootcamp',
-    date: '2025-05-10',
-    time: '11:00 AM – 2:00 PM',
-    location: 'Mumbai',
-    status: 'past',
-    description: 'A forward-looking seminar examining digital transformation in healthcare delivery.',
-    attendees: 38,
-  },
-]
+const SAMPLE_EVENTS = EVENTS || []
 
 function useInView(threshold = 0.2) {
   const ref = useRef(null)
   const [inView, setInView] = useState(false)
+
   useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const obs = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting) setInView(true)
-    }, { threshold })
-    obs.observe(el)
-    return () => obs.disconnect()
+    const element = ref.current
+    if (!element) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true)
+          observer.disconnect()
+        }
+      },
+      { threshold }
+    )
+
+    observer.observe(element)
+    return () => observer.disconnect()
   }, [threshold])
+
   return [ref, inView]
 }
 
-function EventCard({ event, delay }) {
+function EventCard({ event, delay, onRegister }) {
   const [ref, inView] = useInView()
-
   const eventDate = new Date(event.date)
   const day = eventDate.getDate()
   const month = eventDate.toLocaleString('en-US', { month: 'short' }).toUpperCase()
@@ -75,9 +44,7 @@ function EventCard({ event, delay }) {
     <div
       ref={ref}
       className="group"
-      style={{
-        animation: inView ? `fadeUp 0.6s ease-out ${delay}s both` : 'none',
-      }}
+      style={{ animation: inView ? `fadeUp 0.6s ease-out ${delay}s both` : 'none' }}
     >
       <style>{`
         @keyframes fadeUp {
@@ -86,15 +53,14 @@ function EventCard({ event, delay }) {
         }
       `}</style>
 
-      <div className="glass rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-brand-400/20 h-full">
-        {/* Header with Date Badge */}
+      <div className="glass rounded-3xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-brand-400/20 h-full">
         <div className="relative p-6 border-b border-brand-600/10">
-          <div className="absolute top-4 right-4 w-16 h-16 bg-gradient-to-br from-brand-100 to-brand-50 rounded-lg flex flex-col items-center justify-center">
+          <div className="absolute top-4 right-4 w-16 h-16 bg-gradient-to-br from-brand-100 to-brand-50 rounded-3xl flex flex-col items-center justify-center">
             <div className="text-xs font-semibold text-brand-400 uppercase">{month}</div>
             <div className="text-2xl font-bold text-brand-700">{day}</div>
           </div>
 
-          <div className="flex gap-2 mb-3 pr-20">
+          <div className="flex gap-2 mb-3 pr-20 flex-wrap">
             <span className={`inline-block px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded border ${statusStyles[event.status]}`}>
               {event.status === 'upcoming' ? 'Upcoming' : event.status === 'live' ? 'LIVE' : 'Past'}
             </span>
@@ -103,18 +69,12 @@ function EventCard({ event, delay }) {
             </span>
           </div>
 
-          <h3 className="text-lg font-semibold text-brand-900 pr-20">
-            {event.title}
-          </h3>
+          <h3 className="text-xl font-semibold text-brand-900 pr-20">{event.title}</h3>
         </div>
 
-        {/* Content */}
         <div className="p-6">
-          <p className="text-sm text-foreground-muted leading-relaxed mb-4">
-            {event.description}
-          </p>
+          <p className="text-sm text-foreground-muted leading-relaxed mb-5">{event.description}</p>
 
-          {/* Meta Info */}
           <div className="space-y-3 mb-6 pt-4 border-t border-brand-600/10">
             <div className="flex items-center gap-2 text-sm">
               <svg className="w-4 h-4 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -131,9 +91,12 @@ function EventCard({ event, delay }) {
             </div>
           </div>
 
-          {/* CTA */}
-          <button className="w-full px-4 py-2 bg-brand-500 text-white text-sm font-semibold rounded-lg transition-all duration-300 hover:bg-brand-600 hover:shadow-md hover:shadow-brand-500/30">
-            Register Now
+          <button
+            type="button"
+            onClick={onRegister}
+            className="w-full px-4 py-3 bg-brand-500 text-white text-sm font-semibold rounded-2xl transition-all duration-300 hover:bg-brand-600 hover:shadow-lg hover:shadow-brand-500/20"
+          >
+            {event.status === 'past' ? 'Closed' : 'Register Now'}
           </button>
         </div>
       </div>
@@ -141,98 +104,202 @@ function EventCard({ event, delay }) {
   )
 }
 
-export default function Events() {
-  const [filter, setFilter] = useState('all')
-  const filteredEvents = filter === 'all' 
-    ? SAMPLE_EVENTS 
-    : SAMPLE_EVENTS.filter(e => e.status === filter)
+function RegistrationModal({ event, onClose, onSubmit }) {
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    if (!name.trim() || !email.trim()) {
+      alert('Please enter your name and email.')
+      return
+    }
+
+    setSubmitting(true)
+    const payload = {
+      id: Date.now(),
+      eventId: event.id,
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone.trim(),
+      date: new Date().toISOString(),
+    }
+
+    const success = await onSubmit(payload)
+    setSubmitting(false)
+    if (success) {
+      setName('')
+      setEmail('')
+      setPhone('')
+    }
+  }
 
   return (
-    <section className="section-light py-28 sm:py-32">
-      <div className="section-container">
-        {/* Section Header */}
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+      <div className="w-full max-w-2xl rounded-[32px] bg-white p-8 shadow-2xl shadow-brand-900/20">
+        <div className="mb-6 flex items-start justify-between gap-4">
+          <div>
+            <h3 className="text-2xl font-semibold text-brand-900 mb-2">Register: {event.title}</h3>
+            <p className="text-sm text-foreground-muted">Complete the form below and we’ll confirm your seat.</p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-full border border-brand-200 px-4 py-2 text-sm text-brand-700 transition hover:bg-brand-50"
+          >
+            Close
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="grid gap-4">
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            name="name"
+            placeholder="Full name"
+            className="w-full rounded-2xl border border-brand-200 bg-surface px-4 py-3 text-sm text-foreground outline-none transition focus:border-brand-400"
+          />
+          <input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            name="email"
+            type="email"
+            placeholder="Email"
+            className="w-full rounded-2xl border border-brand-200 bg-surface px-4 py-3 text-sm text-foreground outline-none transition focus:border-brand-400"
+          />
+          <input
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            name="phone"
+            placeholder="Phone (optional)"
+            className="w-full rounded-2xl border border-brand-200 bg-surface px-4 py-3 text-sm text-foreground outline-none transition focus:border-brand-400"
+          />
+          <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+            <button
+              type="button"
+              onClick={onClose}
+              className="rounded-2xl border border-brand-200 bg-white px-5 py-3 text-sm text-brand-700 transition hover:bg-brand-50"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={submitting}
+              className="rounded-2xl bg-brand-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:bg-brand-300"
+            >
+              {submitting ? 'Registering…' : 'Submit Registration'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
+
+export default function Events() {
+  const [filter, setFilter] = useState('all')
+  const [events, setEvents] = useState(SAMPLE_EVENTS)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [activeEvent, setActiveEvent] = useState(null)
+
+  useEffect(() => {
+    setEvents(SAMPLE_EVENTS)
+  }, [])
+
+  async function submitRegistration(payload) {
+    try {
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+
+      if (!response.ok) {
+        throw new Error('Registration request failed')
+      }
+      return true
+    } catch (error) {
+      try {
+        const key = 'jvedtech_event_regs'
+        const stored = JSON.parse(localStorage.getItem(key) || '[]')
+        stored.push(payload)
+        localStorage.setItem(key, JSON.stringify(stored))
+        return true
+      } catch (storageError) {
+        return false
+      }
+    }
+  }
+
+  const openRegister = (event) => {
+    setActiveEvent(event)
+    setModalOpen(true)
+  }
+
+  const handleModalSubmit = async (payload) => {
+    const success = await submitRegistration(payload)
+    if (success) {
+      alert('Registered successfully.')
+      setModalOpen(false)
+    } else {
+      alert('Unable to register. Please try again.')
+    }
+  }
+
+  const filteredEvents = filter === 'all' ? events : events.filter((item) => item.status === filter)
+
+  return (
+    <section className="relative overflow-hidden py-28 sm:py-32">
+      <div className="pointer-events-none absolute inset-0 mesh-gradient opacity-30" />
+      <div className="section-container relative">
         <div className="mb-16">
-          <span className="text-xs font-semibold uppercase tracking-widest text-brand-500 block mb-3">
+          <span className="text-xs font-semibold uppercase tracking-widest text-brand-300 block mb-3">
             Learning & Networking
           </span>
-          <h2 className="text-4xl sm:text-5xl font-light font-display text-brand-900 mb-4 leading-tight">
+          <h2 className="text-4xl sm:text-5xl font-light font-display text-white mb-4 leading-tight">
             Upcoming Events
           </h2>
-          <p className="text-lg text-foreground-muted max-w-2xl leading-relaxed">
+          <p className="text-lg text-white/70 max-w-2xl leading-relaxed">
             Join our webinars, workshops, and summits to stay updated on the latest trends in healthcare education and AI-driven innovation.
           </p>
         </div>
 
-        {/* Filter Chips */}
         <div className="flex gap-3 mb-12 flex-wrap">
-          <button
-            onClick={() => setFilter('all')}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-              filter === 'all'
-                ? 'bg-brand-500 text-white'
-                : 'border border-brand-200 text-brand-700 hover:bg-brand-50'
-            }`}
-          >
-            All Events
-          </button>
-          <button
-            onClick={() => setFilter('upcoming')}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-              filter === 'upcoming'
-                ? 'bg-brand-500 text-white'
-                : 'border border-brand-200 text-brand-700 hover:bg-brand-50'
-            }`}
-          >
-            Upcoming
-          </button>
-          <button
-            onClick={() => setFilter('past')}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-              filter === 'past'
-                ? 'bg-brand-500 text-white'
-                : 'border border-brand-200 text-brand-700 hover:bg-brand-50'
-            }`}
-          >
-            Past Events
-          </button>
+          {['all', 'upcoming', 'past'].map((option) => (
+            <button
+              key={option}
+              type="button"
+              onClick={() => setFilter(option)}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                filter === option
+                  ? 'bg-brand-500 text-white'
+                  : 'border border-brand-200 text-brand-700 hover:bg-brand-50'
+              }`}
+            >
+              {option === 'all' ? 'All Events' : option === 'upcoming' ? 'Upcoming' : 'Past Events'}
+            </button>
+          ))}
         </div>
 
-        {/* Events Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {filteredEvents.length > 0 ? (
             filteredEvents.map((event, index) => (
-              <EventCard key={event.id} event={event} delay={index * 0.1} />
+              <EventCard key={event.id} event={event} delay={index * 0.1} onRegister={() => openRegister(event)} />
             ))
           ) : (
-            <div className="col-span-2 text-center py-12">
+            <div className="col-span-2 text-center py-16">
               <div className="text-4xl mb-4">📋</div>
-              <p className="text-foreground-muted">No events found for this filter.</p>
+              <p className="text-white/70">No events matched that filter.</p>
             </div>
           )}
         </div>
-
-        {/* Newsletter CTA */}
-        <div className="mt-16 pt-16 border-t border-brand-600/10">
-          <div className="bg-gradient-to-r from-brand-50 to-brand-100/50 rounded-xl p-8 text-center">
-            <h3 className="text-2xl font-light font-display text-brand-900 mb-3">
-              Don't miss upcoming events
-            </h3>
-            <p className="text-foreground-muted mb-6 max-w-md mx-auto">
-              Subscribe to our newsletter to receive invitations to all future workshops and webinars.
-            </p>
-            <form className="flex gap-2 max-w-md mx-auto" onSubmit={(e) => e.preventDefault()}>
-              <input
-                type="email"
-                placeholder="Your email"
-                className="flex-1 px-4 py-2 rounded-lg border border-brand-200 focus:border-brand-400 focus:outline-none text-sm"
-              />
-              <button className="px-6 py-2 bg-brand-500 text-white font-semibold rounded-lg transition-all duration-300 hover:bg-brand-600 whitespace-nowrap">
-                Subscribe
-              </button>
-            </form>
-          </div>
-        </div>
       </div>
+
+      {modalOpen && activeEvent && (
+        <RegistrationModal event={activeEvent} onClose={() => setModalOpen(false)} onSubmit={handleModalSubmit} />
+      )}
     </section>
   )
 }

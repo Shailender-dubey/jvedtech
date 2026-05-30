@@ -331,7 +331,7 @@ export default function LuminaryHero() {
           >
             <h1
               style={{
-                fontSize: "clamp(52px, 10vw, 110px)",
+                fontSize: "clamp(47px, 8vw, 90px)",
                 color: "#fff",
                 fontWeight: 300,
                 opacity: headingInView && mounted ? 1 : 0,
@@ -342,7 +342,7 @@ export default function LuminaryHero() {
                 transition: "all 1.5s ease",
               }}
             >
-              Learn Smarter
+              Revolutionizing Healthcare Through Innovation and Excellence!
             </h1>
           </div>
 
@@ -359,46 +359,11 @@ export default function LuminaryHero() {
                 transition: "all 1.5s ease",
               }}
             >
-              Discover a smarter way to learn with adaptive AI curriculum.
+              Empowering Lives with Cutting-Edge Solutions in Education, Wellness, and Technology
             </p>
           </div>
 
-          <div
-            style={{
-              marginTop: "48px",
-              display: "flex",
-              gap: "16px",
-            }}
-          >
-            <button
-              onClick={() => setModal("courses")}
-              style={{
-                padding: "14px 36px",
-                borderRadius: "999px",
-                background: "#fff",
-                color: "#1a3a2a",
-                border: "none",
-                cursor: "pointer",
-                fontWeight: 700,
-              }}
-            >
-              Get Started Free
-            </button>
-
-            <button
-              onClick={() => setModal("demo")}
-              style={{
-                padding: "14px 36px",
-                borderRadius: "999px",
-                background: "transparent",
-                color: "#fff",
-                border: "1px solid rgba(255,255,255,0.5)",
-                cursor: "pointer",
-              }}
-            >
-              Watch Demo
-            </button>
-          </div>
+          <div style={{ height: 24 }} />
         </div>
       </div>
 
